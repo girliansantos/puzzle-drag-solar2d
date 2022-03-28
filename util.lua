@@ -38,10 +38,11 @@ function util.getItems()
     local text = ''
     for i = 1, #rects do
         local cont = display.newContainer(pieceWidth, pieceHeight)
-        text = display.newText(textos[i], 0, 0, 0, 0, 50)
+        text = display.newText(textos[i], 0, 0, 0, 0)
         text:setFillColor(0,0,0)
         cont:insert(rects[i], true)
         cont:insert(text, true)
+        cont.id = textos[i]
         containers[i] = cont
         --containers[i]:insert(rects[i], true)
         --containers[i]:insert(textos[i], true)
