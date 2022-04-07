@@ -1,11 +1,11 @@
 
-local numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19}
+local numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
 local tabuleiroWidth = display.contentWidth * 0.8
-local tabuleiroHeight = display.contentHeight * 0.8
+local tabuleiroHeight = display.contentHeight * 0.6
 local pieceWidth = tabuleiroWidth/4
-local pieceHeight = tabuleiroHeight/5
+local pieceHeight = tabuleiroHeight/4
 local firstContainerPosX = display.contentCenterX - 0.30 * display.contentWidth
-local firstContainerPosY = display.contentCenterY - 0.32*display.contentHeight
+local firstContainerPosY = display.contentCenterY - 0.225*display.contentHeight
 local positionContinerX = firstContainerPosX
 local positionContinerY = firstContainerPosY
 local position = 1
@@ -13,6 +13,8 @@ local textos = {}
 local rects = {}
 
 local util = {numbers, pieceWidth, pieceHeight}
+util.pieceWidth = pieceWidth
+util.pieceHeight = pieceHeight
 
 function util.shuffle()
     local array = numbers
@@ -24,7 +26,7 @@ function util.shuffle()
 end
 
 function util.getRects()
-    for i = 1, 19, 1 do
+    for i = 1, 15, 1 do
         rects[i] = display.newRect(0, 0, pieceWidth,pieceHeight);
         rects[i].stroke = {0.3, 0.2, 0.2}
         rects[i].strokeWidth = 3
@@ -42,7 +44,8 @@ function util.getItems()
         text:setFillColor(0,0,0)
         cont:insert(rects[i], true)
         cont:insert(text, true)
-        cont.id = textos[i]
+        cont.value = textos[i]
+        cont.id = i
         containers[i] = cont
         --containers[i]:insert(rects[i], true)
         --containers[i]:insert(textos[i], true)
