@@ -38,6 +38,13 @@ local timerCount = display.newText("00:00", display.contentCenterX- 0.38*tabulei
 timerCount:setFillColor(0)
 local clockTimer
 
+local movesLabel = display.newText("Moves: ", timerCount.x+ 0.57*tabuleiro.width, timerCount.y, native.systemFont, 25);
+movesLabel:setFillColor(0)
+
+-- view para mostrar quantidade de movimentos
+local movesView = display.newText(moves, movesLabel.x+ 0.65*movesLabel.width, timerCount.y, native.systemFont, 25)
+movesView:setFillColor(0)
+
 -- função para iniciar o cronômetro
 function startTimer(e)
     function timerCount:timer(event)
@@ -61,12 +68,18 @@ end
 -- cria e distribui as peças do jogo
 local containers = util:getItems()
 
+-- função para incrementar os movimentos e atualizar a tela
+function movesPlus()
+    moves = moves +1
+    movesView.text = moves
+end
+
 function move_rigth(pos)
     for i=1, #containers do
         if containers[i].id == pos then
             transition.moveTo(containers[i],{x = containers[i].x + util.pieceWidth, y = containers[i].y, time = velocity})
             containers[i].id = pos+1
-            moves = moves+1
+            movesPlus()
             audio.play(slash)
         end
     end
@@ -78,7 +91,7 @@ function move_left(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i],{x = containers[i].x - util.pieceWidth, y = containers[i].y, time = velocity});
             containers[i].id = pos-1
-            moves = moves+1
+            movesPlus()
             audio.play(slash)
         end
     end
@@ -90,7 +103,7 @@ function move_down(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y + util.pieceHeight, time = velocity})
             containers[i].id = pos+4
-            moves = moves+1
+            movesPlus()
             audio.play(slash)
         end
     end
@@ -102,7 +115,7 @@ function move_up(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y - util.pieceHeight, time = velocity})
             containers[i].id = pos-4
-            moves = moves+1
+            movesPlus()
             audio.play(slash)
         end
     end
