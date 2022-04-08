@@ -21,6 +21,8 @@ local moves = 0
 
 local velocity = 100
 
+local start = true
+
 local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
 background.x = display.contentCenterX
 background.y = display.contentCenterY
@@ -30,6 +32,31 @@ local tabuleiro = display.newRect(display.contentCenterX, display.contentCenterY
 tabuleiro:setFillColor(0.8)
 tabuleiro.stroke = {0.5882, 0.2941, 0}
 tabuleiro.strokeWidth = 5
+
+-- Timer para cronometrar o jogo
+local timerCount = display.newText("00:00", display.contentCenterX- 0.38*tabuleiro.width, display.contentCenterY - 0.55 * tabuleiro.height , native.systemFont, 25)
+timerCount:setFillColor(0)
+local clockTimer
+
+-- função para iniciar o cronômetro
+function startTimer(e)
+    function timerCount:timer(event)
+        local count = event.count
+        segundos = math.floor(count/10)
+        segundos = math.floor(segundos % 60)
+        minutos = math.floor(count/600)
+        minutos = math.floor(minutos % 60)
+    
+        padraoTexto = string.format("%02d:%02d",minutos, segundos)
+        timerCount.text = padraoTexto
+    end
+    clockTimer = timer.performWithDelay(100,timerCount,-1)
+end
+
+-- função para parar o cronômetro
+function stopTimer()
+    timer.cancel(clockTimer)
+end
 
 -- cria e distribui as peças do jogo
 local containers = util:getItems()
@@ -126,6 +153,7 @@ function game()
     if(won) then
         audio.play(finish);
         native.showAlert("YOU WON","GANHOU PESTE!!!");
+        stopTimer()
     end
 end
 
@@ -133,6 +161,10 @@ end
 function onTouch(self, event)
     if(event.phase == "began") then
         move(self.id)
+        if(start) then
+            startTimer()
+            start = false
+        end
     elseif(event.phase == "ended") then
         -- fazer algo se necessário
     end
