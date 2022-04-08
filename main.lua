@@ -9,6 +9,10 @@
 local util = require("util")
 local core = require("core")
 
+-- sons do jogo
+local slash = audio.loadSound("slash.mp3");
+local finish = audio.loadSound("finish.mp3");
+
 local positions_active = {}
 
 local empty_pos = 16
@@ -36,6 +40,7 @@ function move_rigth(pos)
             transition.moveTo(containers[i],{x = containers[i].x + util.pieceWidth, y = containers[i].y, time = velocity})
             containers[i].id = pos+1
             moves = moves+1
+            audio.play(slash)
         end
     end
     game()
@@ -47,6 +52,7 @@ function move_left(pos)
             transition.moveTo(containers[i],{x = containers[i].x - util.pieceWidth, y = containers[i].y, time = velocity});
             containers[i].id = pos-1
             moves = moves+1
+            audio.play(slash)
         end
     end
     game()
@@ -58,6 +64,7 @@ function move_down(pos)
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y + util.pieceHeight, time = velocity})
             containers[i].id = pos+4
             moves = moves+1
+            audio.play(slash)
         end
     end
     game()
@@ -69,6 +76,7 @@ function move_up(pos)
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y - util.pieceHeight, time = velocity})
             containers[i].id = pos-4
             moves = moves+1
+            audio.play(slash)
         end
     end
     game()
@@ -116,6 +124,7 @@ function game()
     end
 
     if(won) then
+        audio.play(finish);
         native.showAlert("YOU WON","GANHOU PESTE!!!");
     end
 end
