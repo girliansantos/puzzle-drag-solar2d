@@ -48,9 +48,10 @@ end
 
 function util.getRects()
     for i = 1, 15, 1 do
-        rects[i] = display.newRect(0, 0, pieceWidth,pieceHeight);
-        rects[i].stroke = {0.3, 0.2, 0.2}
-        rects[i].strokeWidth = 3
+        -- rects[i] = display.newRect(0, 0, pieceWidth,pieceHeight);
+        -- rects[i].stroke = {0.3, 0.2, 0.2}
+        -- rects[i].strokeWidth = 3
+        rects[i] = display.newImageRect("tile-blue.jpg",pieceWidth,pieceHeight)
     end
 end
 
@@ -68,8 +69,9 @@ function util.getItems()
     local text = ''
     for i = 1, #rects do
         local cont = display.newContainer(pieceWidth, pieceHeight)
-        text = display.newText(textos[i], 0, 0, 0, 0)
-        text:setFillColor(0,0,0)
+        -- text = display.newText(textos[i], 0, 0, 0, 0)
+        text = display.newText(textos[i], 0, 0, native.systemFontBold, 20)
+        text:setFillColor(1)
         cont:insert(rects[i], true)
         cont:insert(text, true)
         cont.value = textos[i]

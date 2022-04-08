@@ -23,27 +23,29 @@ local velocity = 100
 
 local start = true
 
-local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
+--local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
+local background = display.newImageRect("background.jpg",display.contentWidth,display.contentHeight)
 background.x = display.contentCenterX
 background.y = display.contentCenterY
 
 -- cria o tabuleiro
-local tabuleiro = display.newRect(display.contentCenterX, display.contentCenterY, display.contentWidth*0.8, display.contentHeight*0.6)
+--local tabuleiro = display.newRect(display.contentCenterX, display.contentCenterY, display.contentWidth*0.8, display.contentHeight*0.6)
+local tabuleiro = display.newRoundedRect(display.contentCenterX, display.contentCenterY, display.contentWidth*0.8, display.contentHeight*0.6, 4)
 tabuleiro:setFillColor(0.8)
-tabuleiro.stroke = {0.5882, 0.2941, 0}
+tabuleiro.stroke = {0, 0, 0.3}
 tabuleiro.strokeWidth = 5
 
 -- Timer para cronometrar o jogo
 local timerCount = display.newText("00:00", display.contentCenterX- 0.38*tabuleiro.width, display.contentCenterY - 0.55 * tabuleiro.height , native.systemFont, 25)
-timerCount:setFillColor(0)
+timerCount:setFillColor(1)
 local clockTimer
 
 local movesLabel = display.newText("Moves: ", timerCount.x+ 0.57*tabuleiro.width, timerCount.y, native.systemFont, 25);
-movesLabel:setFillColor(0)
+movesLabel:setFillColor(1)
 
 -- view para mostrar quantidade de movimentos
 local movesView = display.newText(moves, movesLabel.x+ 0.65*movesLabel.width, timerCount.y, native.systemFont, 25)
-movesView:setFillColor(0)
+movesView:setFillColor(1)
 
 -- função para iniciar o cronômetro
 function startTimer(e)
