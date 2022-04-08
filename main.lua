@@ -13,7 +13,9 @@ local positions_active = {}
 
 local empty_pos = 16
 
-local velocity = 200
+local moves = 0
+
+local velocity = 100
 
 local background = display.newRect(0, 0, display.contentWidth, display.contentHeight)
 background.x = display.contentCenterX
@@ -33,6 +35,7 @@ function move_rigth(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i],{x = containers[i].x + util.pieceWidth, y = containers[i].y, time = velocity})
             containers[i].id = pos+1
+            moves = moves+1
         end
     end
     game()
@@ -43,6 +46,7 @@ function move_left(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i],{x = containers[i].x - util.pieceWidth, y = containers[i].y, time = velocity});
             containers[i].id = pos-1
+            moves = moves+1
         end
     end
     game()
@@ -53,6 +57,7 @@ function move_down(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y + util.pieceHeight, time = velocity})
             containers[i].id = pos+4
+            moves = moves+1
         end
     end
     game()
@@ -63,6 +68,7 @@ function move_up(pos)
         if containers[i].id == pos then
             transition.moveTo(containers[i], {x = containers[i].x, y = containers[i].y - util.pieceHeight, time = velocity})
             containers[i].id = pos-4
+            moves = moves+1
         end
     end
     game()
@@ -95,11 +101,7 @@ function move(pos)
         end
         if((empty_pos + 1 <= 16) and ((empty_pos + 1) % 4 ~= 1))then
             positions_active[empty_pos+1] = 1
-        end
-        for i=1, #positions_active do
-            print(positions_active[i])
-        end
-        print('posição vazia: ', empty_pos)    
+        end    
     end
 end
 
@@ -121,10 +123,9 @@ end
 -- toda lógica do jogo
 function onTouch(self, event)
     if(event.phase == "began") then
-        print('COMEÇOU')
         move(self.id)
     elseif(event.phase == "ended") then
-        print('ACABOU')
+        -- fazer algo se necessário
     end
 end
 
@@ -137,16 +138,15 @@ end
 for i=1, #containers+1 do
     positions_active[i] = 0
 end
-
 -- adiciona eventos aos itens
 function add_events()
     for i=1, #containers do
-        --containers[i]:addEventListener('touch', onTouch)
         if(containers[i] ~= nil) then
             containers[i].touch = onTouch
             containers[i]:addEventListener('touch', containers[i])
         end
     end
+    system.deactivate("multitouch");
 end
 
 add_events()

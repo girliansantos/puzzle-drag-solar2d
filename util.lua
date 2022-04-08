@@ -16,6 +16,27 @@ local util = {numbers, pieceWidth, pieceHeight}
 util.pieceWidth = pieceWidth
 util.pieceHeight = pieceHeight
 
+function count_inversions()
+    inversions = 0
+    for i=1, #textos do
+        for j=i, #textos do
+            if textos[j] < textos[i] then
+                inversions = inversions+1
+            end
+        end
+    end
+    return inversions
+end
+
+function util.indexOf(a, value)
+    for i=1, #a do
+        if a[i] == value then
+            return i
+        end
+    end
+    return nil
+end
+
 function util.shuffle()
     local array = numbers
     for i = #array, 2, -1 do
@@ -35,6 +56,13 @@ end
 
 function util.getItems()
     util:shuffle()
+    inv = count_inversions()
+    if inv % 2 ~= 0 then
+        aux = textos[1]
+        textos[1] = textos[2]
+        textos[2] = aux
+    end
+    inv = count_inversions()
     util:getRects()
     local containers = {}
     local text = ''
@@ -47,8 +75,6 @@ function util.getItems()
         cont.value = textos[i]
         cont.id = i
         containers[i] = cont
-        --containers[i]:insert(rects[i], true)
-        --containers[i]:insert(textos[i], true)
         containers[i]:translate(positionContinerX, positionContinerY)
         if position == 4 then
             position = 1
