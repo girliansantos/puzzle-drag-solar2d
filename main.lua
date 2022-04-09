@@ -10,8 +10,10 @@ local util = require("util")
 local core = require("core")
 
 -- sons do jogo
-local slash = audio.loadSound("slash.mp3");
-local finish = audio.loadSound("finish.mp3");
+local slash = audio.loadSound("slash.mp3")
+-- local finish = audio.loadSound("finish.mp3")
+local sucess = audio.loadSound("sucess-trumpet.mp3")
+local alert = audio.loadSound("notification.mp3")
 
 local positions_active = {}
 
@@ -36,16 +38,36 @@ tabuleiro.stroke = {0, 0, 0.3}
 tabuleiro.strokeWidth = 5
 
 -- Timer para cronometrar o jogo
-local timerCount = display.newText("00:00", display.contentCenterX- 0.38*tabuleiro.width, display.contentCenterY - 0.55 * tabuleiro.height , native.systemFont, 25)
+local timerCount = display.newText("00:00", 0,  0, native.systemFont, 25)
 timerCount:setFillColor(1)
+
+-- container para cronômetro
+local timer_image = display.newImageRect("button-timer.png",display.contentWidth*0.4,display.contentHeight*0.1)
+timer_container = display.newContainer(200, 80)
+timer_container:insert(timer_image, true)
+timer_container:insert(timerCount, true)
+timer_container:translate(display.contentCenterX- 0.28*tabuleiro.width, display.contentCenterY - 0.6 * tabuleiro.height)
 local clockTimer
 
-local movesLabel = display.newText("Moves: ", timerCount.x+ 0.57*tabuleiro.width, timerCount.y, native.systemFont, 25);
-movesLabel:setFillColor(1)
-
 -- view para mostrar quantidade de movimentos
-local movesView = display.newText(moves, movesLabel.x+ 0.65*movesLabel.width, timerCount.y, native.systemFont, 25)
+local movesView = display.newText(moves, 0, 0, native.systemFontBold, 25)
 movesView:setFillColor(1)
+
+-- container para movimentos
+local moves_img = display.newImageRect("button-timer.png", display.contentWidth*0.3, display.contentHeight*0.1)
+local moves_container = display.newContainer(moves_img.width, moves_img.height)
+moves_container:insert(moves_img, true)
+moves_container:insert(movesView, true)
+moves_container:translate(timer_container.x+display.contentWidth*0.5, timer_container.y)
+
+-- container para botão de reiniciar jogo
+local btn_restart_img = display.newImageRect("button-restart.png",display.contentWidth*0.7,display.contentHeight*0.1)
+local btn_text = display.newText("Recomeçar", 0, 0, native.systemFontBold, 30)
+btn_text:setFillColor(1)
+local btn_restart_container = display.newContainer(btn_restart_img.width, btn_restart_img.height)
+btn_restart_container:insert(btn_restart_img, true)
+btn_restart_container:insert(btn_text, true)
+btn_restart_container:translate(tabuleiro.x, tabuleiro.y + display.contentHeight*0.42)
 
 -- função para iniciar o cronômetro
 function startTimer(e)
@@ -166,8 +188,8 @@ function game()
     end
 
     if(won) then
-        audio.play(finish);
-        native.showAlert("YOU WON","GANHOU PESTE!!!");
+        audio.play(sucess)
+        native.showAlert("YOU WON","GANHOU PESTE!!!")
         stopTimer()
     end
 end
@@ -185,15 +207,48 @@ function onTouch(self, event)
     end
 end
 
+-- função a acionar quando clicar no botão para recomeçar jogo
+function onRestart(event)
+    if(event.phase == "began") then
+        -- mostrar alerta antes de fazer qualquer coisa
+        audio.play(alert)
+        native.showAlert("Reiniciar Jogo","Tem certeza que deseja recomeçar?",{"Não", "Sim"},onComplete)
+    end
+end
+
+function onComplete(event)
+    if ( event.action == "clicked" ) then
+        local i = event.index
+        if ( i == 1 ) then
+            -- Do nothing; dialog will simply dismiss
+        elseif ( i == 2 ) then
+            for i=1, #containers do
+                containers[i]:removeSelf()
+            end
+            containers = util:getItems()
+            positions_active = {}
+            empty_pos = 16
+            moves = 0
+            movesView.text = moves
+            add_events()
+            inicializa_positions()
+            --zera cronômetro
+            stopTimer()
+            start = true
+            timerCount.text = "00:00"
+        end
+    end
+end
+
 function inicializa_positions()
+    -- inicia posições válidas para toque nos itens
+    for i=1, #containers+1 do
+        positions_active[i] = 0
+    end
     positions_active[empty_pos-1] = 1
     positions_active[empty_pos-4] = 1
 end
 
--- inicia posições válidas para toque nos itens
-for i=1, #containers+1 do
-    positions_active[i] = 0
-end
 -- adiciona eventos aos itens
 function add_events()
     for i=1, #containers do
@@ -202,6 +257,7 @@ function add_events()
             containers[i]:addEventListener('touch', containers[i])
         end
     end
+    btn_restart_container:addEventListener('touch', onRestart)
     system.deactivate("multitouch");
 end
 

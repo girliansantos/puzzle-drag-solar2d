@@ -87,6 +87,9 @@ function util.getItems()
             positionContinerX = positionContinerX + pieceWidth
         end
     end
+    positionContinerX = firstContainerPosX
+    positionContinerY = firstContainerPosY
+    position = 1
     return containers
 end
 
