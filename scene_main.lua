@@ -94,13 +94,23 @@ function scene_main:hide(event)
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+        composer.removeScene(scene_main)
     end
 end
 
 function scene_main:destroy(event)
     local sceneGroup = self.view
     -- code here
+    for i=1, #containers do
+        display.remove(containers[i])
+        containers[i].removeSelf()
+    end
+    display.remove(moves_container)
+    display.remove(timer_container)
+    display.remove(background)
+    moves_img.removeSelf()
+    movesView.removeSelf()
+    moves_container.removeSelf()
 end
 
 -- função para iniciar o cronômetro
@@ -222,6 +232,7 @@ function game()
         audio.play(sucess)
         native.showAlert("YOU WON","GANHOU PESTE!!!")
         stopTimer()
+        endGame()
     end
 end
 
@@ -245,6 +256,12 @@ function onRestart(event)
         audio.play(alert)
         native.showAlert("Reiniciar Jogo","Tem certeza que deseja recomeçar?",{"Não", "Sim"},onComplete)
     end
+end
+
+function endGame()
+    composer.setVariable("score",moves)
+    composer.setVariable("time",timerCount.text)
+    composer.gotoScene("highscore", {time = 2000, effect="crossFade"})
 end
 
 function onComplete(event)
