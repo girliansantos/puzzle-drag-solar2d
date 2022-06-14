@@ -61,8 +61,8 @@ function scene_main:create(event)
     moves_container:translate(timer_container.x+display.contentWidth*0.5, timer_container.y)
 
     -- container para botão de reiniciar jogo
-    btn_restart_img = display.newImageRect("button-restart.png",display.contentWidth*0.7,display.contentHeight*0.1)
-    btn_text = display.newText("Recomeçar", 0, 0, native.systemFontBold, 30)
+    btn_restart_img = display.newImageRect("button-restart.png",display.contentWidth*0.4,display.contentHeight*0.07)
+    btn_text = display.newText("Recomeçar", 0, 0, native.systemFontBold, 18)
     btn_text:setFillColor(1)
     btn_restart_container = display.newContainer(btn_restart_img.width, btn_restart_img.height)
     btn_restart_container:insert(btn_restart_img, true)
@@ -139,6 +139,7 @@ function movesPlus()
     movesView.text = moves
 end
 
+-- função para mover a peça para direita
 function move_rigth(pos)
     for i=1, #containers do
         if containers[i].id == pos then
@@ -151,6 +152,7 @@ function move_rigth(pos)
     game()
 end
 
+-- função para mover a peça para esquerda
 function move_left(pos)
     for i=1, #containers do
         if containers[i].id == pos then
@@ -163,6 +165,7 @@ function move_left(pos)
     game()
 end
 
+-- função para mover a peça para baixo
 function move_down(pos)
     for i=1, #containers do
         if containers[i].id == pos then
@@ -175,6 +178,7 @@ function move_down(pos)
     game()
 end
 
+-- função para mover a peça para cima
 function move_up(pos)
     for i=1, #containers do
         if containers[i].id == pos then
@@ -187,6 +191,7 @@ function move_up(pos)
     game()
 end
 
+-- função central que coordena os movimentos das peças
 function move(pos)
     if(positions_active[pos] == 1)then
         previous_pos = empty_pos
@@ -230,7 +235,6 @@ function game()
 
     if(won) then
         audio.play(sucess)
-        native.showAlert("YOU WON","GANHOU PESTE!!!")
         stopTimer()
         endGame()
     end

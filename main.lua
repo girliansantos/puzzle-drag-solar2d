@@ -6,4 +6,4 @@
 
 local composer = require("composer");
 
-composer.gotoScene("scene_main");
+composer.gotoScene("initial_scene");
